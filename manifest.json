@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "fast-down",
+  "version": "0.1.0",
+  "description": "转发下载到 fast-down",
+  "permissions": ["downloads", "storage", "cookies", "webRequest", "tabs"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "128": "icons/icon128.png"
+  }
+}
