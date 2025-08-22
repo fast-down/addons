@@ -25,18 +25,18 @@ setInterval(() => {
 // 监听下载事件
 chrome.downloads.onCreated.addListener(async (downloadItem) => {
   if (!isRunning) return;
-  const url = new URL(downloadItem.url);
+  const url = new URL(downloadItem.finalUrl || downloadItem.url);
   if (!["http:", "https:"].includes(url.protocol)) return;
   await chrome.downloads.cancel(downloadItem.id);
   console.log("downloads.onCreated", downloadItem);
-  const cookies = await getCookies(downloadItem.url, downloadItem.referrer);
+  const cookies = await getCookies(url.href, downloadItem.referrer);
   const headers = {
     Referer: downloadItem.referrer,
     Cookie: cookies.map(({ name, value }) => `${name}=${value}`).join("; "),
-    ...requestHeaders[downloadItem.url]?.headers,
+    ...requestHeaders[url.href]?.headers,
     Accept: downloadItem.mime,
   };
-  download(downloadItem.url, headers);
+  download(url.href, headers);
 });
 
 // 获取 cookies
