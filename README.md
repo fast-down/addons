@@ -7,10 +7,8 @@
 
 ## 使用
 
-1. [下载插件](https://github.com/fast-down/addons/archive/refs/heads/master.zip)
+1. [下载插件](https://github.com/fast-down/addons/releases)
 2. 打开浏览器扩展管理页面
 3. 打开 **开发者模式**
-4. 点击 **加载已解压的扩展程序** 按钮
-5. 选择下载的 **插件文件夹**[^1]
-
-[^1]: 请确保文件夹中 **直接包含** `manifest.json` 文件，而不是子文件夹中包含 `manifest.json` 文件
+4. 点击 **加载扩展程序** 按钮
+5. 选择下载的插件

@@ -1,0 +1,17 @@
+{
+  "name": "addons",
+  "private": true,
+  "scripts": {
+    "build": "bun build.ts"
+  },
+  "devDependencies": {
+    "@types/archiver": "^6.0.3",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1"
+  }
+}

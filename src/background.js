@@ -1,3 +1,5 @@
+if (typeof chrome === "undefined") chrome = browser;
+
 let isRunning = false;
 chrome.storage.local.get("isRunning").then((result) => {
   isRunning = result?.isRunning ?? true;
