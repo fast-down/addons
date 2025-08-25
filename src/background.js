@@ -29,9 +29,9 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
   if (!isRunning) return;
   const url = new URL(downloadItem.finalUrl || downloadItem.url);
   if (!["http:", "https:"].includes(url.protocol)) return;
-  await chrome.downloads.cancel(downloadItem.id).catch(console.error);
-  await chrome.downloads.removeFile(downloadItem.id).catch(console.error);
-  await chrome.downloads.erase({ id: downloadItem.id }).catch(console.error);
+  await chrome.downloads.cancel(downloadItem.id).catch(() => {});
+  await chrome.downloads.removeFile(downloadItem.id).catch(() => {});
+  await chrome.downloads.erase({ id: downloadItem.id }).catch(() => {});
   console.log("downloads.onCreated", downloadItem);
   const cookies = await getCookies(url.href, downloadItem.referrer);
   const headers = {
@@ -46,13 +46,15 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
 // 获取 cookies
 async function getCookies(url, referer) {
   const res = await chrome.cookies.getAll({ url });
+  console.log("getCookies self", url, res);
   const domain = new URL(url).host;
   res.push(...(await chrome.cookies.getAll({ domain })));
+  console.log("getCookies self+domain", domain, res);
   if (referer) {
     const refererDomain = new URL(referer).host;
     res.push(...(await chrome.cookies.getAll({ domain: refererDomain })));
+    console.log("getCookies self+domain+referer", refererDomain, res);
   }
-  console.log("getCookies", domain, res);
   return res;
 }
 
@@ -81,27 +83,45 @@ function formatHeaders(headers) {
     .join("\n");
 }
 
+let id = 0;
 // 处理下载拦截
 async function download(url, headers) {
   console.log("download", url, headers);
-  const encodedUrl = encodeURIComponent(url);
   const headersString = formatHeaders(headers);
+  const init = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ url, headers: headersString }),
+  };
   try {
-    const res = await fetch("http://localhost:6121/download", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url, headers: headersString }),
-    });
+    const res = await fetch("http://localhost:6121/download", init);
     if (res.status !== 201) throw new Error("Calling failed");
   } catch (e) {
-    console.error(e);
-    const encodedHeaders = encodeURIComponent(headersString);
-    const forwardUrl = `fast-down://download?url=${encodedUrl}&headers=${encodedHeaders}`;
-    console.log("forwardUrl", forwardUrl);
+    console.error("calling failed", e);
     try {
-      await chrome.tabs.create({ url: forwardUrl });
+      await chrome.tabs.create({ url: "fast-down://" });
+      const localId = id++ + "";
+      chrome.notifications.create(localId, {
+        type: "basic",
+        iconUrl: chrome.runtime.getURL("icons/icon128.png"),
+        title: "开始下载",
+        message: "在 fast-down-gui 完全启动后，点击此通知开始下载",
+      });
+      chrome.notifications.onClicked.addListener(async function t(
+        notificationId
+      ) {
+        if (notificationId !== localId) return;
+        chrome.notifications.clear(localId);
+        chrome.notifications.onClicked.removeListener(t);
+        try {
+          const res = await fetch("http://localhost:6121/download", init);
+          if (res.status !== 201) throw new Error("Calling failed");
+        } catch (e) {
+          console.error("calling failed", e);
+        }
+      });
     } catch (error) {
       console.error("Failed to create tab for deep link:", error);
     }
