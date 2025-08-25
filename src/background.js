@@ -86,13 +86,25 @@ async function download(url, headers) {
   console.log("download", url, headers);
   const encodedUrl = encodeURIComponent(url);
   const headersString = formatHeaders(headers);
-  const encodedHeaders = encodeURIComponent(headersString);
-  const forwardUrl = `fast-down://download?url=${encodedUrl}&headers=${encodedHeaders}`;
-  console.log("forwardUrl", forwardUrl);
   try {
-    await chrome.tabs.create({ url: forwardUrl });
-  } catch (error) {
-    console.error("Failed to create tab for deep link:", error);
+    const res = await fetch("http://localhost:6121/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url, headers: headersString }),
+    });
+    if (res.status !== 201) throw new Error("Calling failed");
+  } catch (e) {
+    console.error(e);
+    const encodedHeaders = encodeURIComponent(headersString);
+    const forwardUrl = `fast-down://download?url=${encodedUrl}&headers=${encodedHeaders}`;
+    console.log("forwardUrl", forwardUrl);
+    try {
+      await chrome.tabs.create({ url: forwardUrl });
+    } catch (error) {
+      console.error("Failed to create tab for deep link:", error);
+    }
   }
 }
 
