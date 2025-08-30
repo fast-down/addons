@@ -29,17 +29,18 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
   if (!isRunning) return;
   const url = new URL(downloadItem.finalUrl || downloadItem.url);
   if (!["http:", "https:"].includes(url.protocol)) return;
-  await chrome.downloads.cancel(downloadItem.id).catch(() => {});
-  await chrome.downloads.removeFile(downloadItem.id).catch(() => {});
-  await chrome.downloads.erase({ id: downloadItem.id }).catch(() => {});
+  await chrome.downloads.cancel(downloadItem.id).catch(() => { });
+  await chrome.downloads.removeFile(downloadItem.id).catch(() => { });
+  await chrome.downloads.erase({ id: downloadItem.id }).catch(() => { });
   console.log("downloads.onCreated", downloadItem);
   const cookies = await getCookies(url.href, downloadItem.referrer);
+  const cookieStr = cookies.map(({ name, value }) => `${name}=${value}`).join("; ");
   const headers = {
     Referer: downloadItem.referrer,
-    Cookie: cookies.map(({ name, value }) => `${name}=${value}`).join("; "),
     ...requestHeaders[url.href]?.headers,
     Accept: downloadItem.mime,
   };
+  if (cookieStr) headers.Cookie = cookieStr;
   download(url.href, headers);
 });
 
