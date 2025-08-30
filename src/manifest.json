@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "fast-down",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "转发下载到 fast-down",
   "permissions": [
     "downloads",
@@ -11,10 +11,14 @@
     "tabs",
     "notifications"
   ],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "background": {
     "service_worker": "background.js",
-    "scripts": ["background.js"]
+    "scripts": [
+      "background.js"
+    ]
   },
   "action": {
     "default_icon": {
