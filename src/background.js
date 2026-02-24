@@ -29,12 +29,14 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
   if (!isRunning) return;
   const url = new URL(downloadItem.finalUrl || downloadItem.url);
   if (!["http:", "https:"].includes(url.protocol)) return;
-  await chrome.downloads.cancel(downloadItem.id).catch(() => { });
-  await chrome.downloads.removeFile(downloadItem.id).catch(() => { });
-  await chrome.downloads.erase({ id: downloadItem.id }).catch(() => { });
+  await chrome.downloads.cancel(downloadItem.id).catch(() => {});
+  await chrome.downloads.removeFile(downloadItem.id).catch(() => {});
+  await chrome.downloads.erase({ id: downloadItem.id }).catch(() => {});
   console.log("downloads.onCreated", downloadItem);
   const cookies = await getCookies(url.href, downloadItem.referrer);
-  const cookieStr = cookies.map(({ name, value }) => `${name}=${value}`).join("; ");
+  const cookieStr = cookies
+    .map(({ name, value }) => `${name}=${value}`)
+    .join("; ");
   const headers = {
     Referer: downloadItem.referrer,
     ...requestHeaders[url.href]?.headers,
@@ -74,7 +76,7 @@ chrome.webRequest.onSendHeaders.addListener(
     }
   },
   { urls: ["<all_urls>"] },
-  ["requestHeaders"]
+  ["requestHeaders"],
 );
 
 // 格式化headers为字符串
@@ -102,27 +104,21 @@ async function download(url, headers) {
   } catch (e) {
     console.error("calling failed", e);
     try {
-      await chrome.tabs.create({ url: "fast-down://" });
       const localId = id++ + "";
       chrome.notifications.create(localId, {
         type: "basic",
         iconUrl: chrome.runtime.getURL("icons/icon128.png"),
-        title: "开始下载",
-        message: "在 fast-down-gui 完全启动后，点击此通知开始下载",
+        title: "fast-down 未启动",
+        message: "手动启动 fast-down 后点击此通知开始下载",
       });
-      chrome.notifications.onClicked.addListener(async function t(
-        notificationId
-      ) {
-        if (notificationId !== localId) return;
-        chrome.notifications.clear(localId);
-        chrome.notifications.onClicked.removeListener(t);
-        try {
-          const res = await fetch("http://localhost:6121/download", init);
-          if (res.status !== 201) throw new Error("Calling failed");
-        } catch (e) {
-          console.error("calling failed", e);
-        }
-      });
+      chrome.notifications.onClicked.addListener(
+        async function t(notificationId) {
+          if (notificationId !== localId) return;
+          chrome.notifications.clear(localId);
+          chrome.notifications.onClicked.removeListener(t);
+          download(url, headers);
+        },
+      );
     } catch (error) {
       console.error("Failed to create tab for deep link:", error);
     }

@@ -1,24 +1,19 @@
 {
   "manifest_version": 3,
   "name": "fast-down",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "转发下载到 fast-down",
   "permissions": [
     "downloads",
     "storage",
     "cookies",
     "webRequest",
-    "tabs",
     "notifications"
   ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js",
-    "scripts": [
-      "background.js"
-    ]
+    "scripts": ["background.js"]
   },
   "action": {
     "default_icon": {
@@ -30,7 +25,10 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "fast-down@s121.top"
+      "id": "fast-down@s121.top",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   }
 }
