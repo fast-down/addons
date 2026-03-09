@@ -3,6 +3,7 @@
   "name": "fast-down",
   "version": "2.0.0",
   "description": "转发下载到 fast-down",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtKtFlUorEzsSC8HaAubWWbJkAsaaQkb/05vcQ9d81rw5EKoGNsBFG0f5/QouV4EU/U6ZyxVri3XjNr7K59mr+tLdfGrXKPskxcWod2+NBv9BOC7U1jdwH/OFQlFGJOdcBocDAKq1I0QwjQ7InBsnSJqNctwklrpGrGQ+qZOZiLdjU/zQTRl2m7tu0ZsrDSVpUGCDybbg0hYk2D/nioxw+b99jn6l0kAh4LuIyoVcvpeJYtfq/AWhgb+x4EJD2iAOCmL9bCHXr1NJXfOOVq/rstg1eRl0EFkQSPx5TEa89V2cgQNqJ0Bf7HAWnqbl37o69p+J+49OHJBWehrPJMt2ZQIDAQAB",
   "permissions": [
     "downloads",
     "storage",
