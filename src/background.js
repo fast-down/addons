@@ -1,5 +1,7 @@
 if (typeof chrome === "undefined") chrome = browser;
 
+const NATIVE_HOST = "top.s121.fd";
+
 let isRunning = false;
 chrome.storage.local.get("isRunning").then((result) => {
   isRunning = result?.isRunning ?? true;
@@ -17,8 +19,9 @@ let requestHeaders = {};
 
 // 清理过期的请求头
 setInterval(() => {
+  const now = Date.now();
   for (const key in requestHeaders) {
-    if (Date.now() - requestHeaders[key].addTime > 5000) {
+    if (now - requestHeaders[key].addTime > 5000) {
       delete requestHeaders[key];
     }
   }
@@ -86,44 +89,84 @@ function formatHeaders(headers) {
     .join("\n");
 }
 
-let id = 0;
-// 处理下载拦截
-async function download(url, headers) {
-  console.log("download", url, headers);
+// 通过 Native Messaging 发送下载任务
+function download(url, headers) {
   const headersString = formatHeaders(headers);
-  const init = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ url, headers: headersString }),
-  };
-  try {
-    const res = await fetch("http://localhost:6121/download", init);
-    if (res.status !== 201) throw new Error("Calling failed");
-  } catch (e) {
-    console.error("calling failed", e);
-    try {
-      const localId = id++ + "";
-      chrome.notifications.create(localId, {
-        type: "basic",
-        iconUrl: chrome.runtime.getURL("icons/icon128.png"),
-        title: "fast-down 未启动",
-        message: "手动启动 fast-down 后点击此通知开始下载",
-      });
-      chrome.notifications.onClicked.addListener(
-        async function t(notificationId) {
-          if (notificationId !== localId) return;
-          chrome.notifications.clear(localId);
-          chrome.notifications.onClicked.removeListener(t);
-          download(url, headers);
-        },
+  const message = { type: "Download", url, headers: headersString };
+  console.log("Sending to Native Host:", NATIVE_HOST, message);
+  chrome.runtime.sendNativeMessage(NATIVE_HOST, message, (response) => {
+    if (chrome.runtime.lastError) {
+      console.error(
+        "Native Messaging Error:",
+        chrome.runtime.lastError.message,
       );
-    } catch (error) {
-      console.error("Failed to create tab for deep link:", error);
+      showLaunchNotification(url, headers);
+    } else {
+      console.log("Response from Rust:", response);
+      if (response.status == "success") {
+        showSuccessNotification(url);
+      } else {
+        showLaunchNotification(url, headers);
+      }
+    }
+  });
+}
+
+// 错误/未启动 通知提示
+async function showLaunchNotification(url, headers) {
+  const localId = "fast-down-err-" + Date.now();
+  await chrome.storage.local.set({ [localId]: { url, headers } });
+  chrome.notifications.create(localId, {
+    type: "basic",
+    iconUrl: chrome.runtime.getURL("icons/icon128.png"),
+    title: "fast-down 未启动",
+    message: `请确保程序已安装并运行，点击此条重试。\n${url}`,
+  });
+}
+
+// 成功 通知提示
+function showSuccessNotification(url) {
+  const localId = "fast-down-success-" + Date.now();
+  chrome.notifications.create(localId, {
+    type: "basic",
+    iconUrl: chrome.runtime.getURL("icons/icon128.png"),
+    title: "下载已接管",
+    message: `任务已成功发送到 fast-down，点击此处唤醒应用界面。\n${url}`,
+  });
+}
+
+chrome.notifications.onClicked.addListener(async (notificationId) => {
+  chrome.notifications.clear(notificationId);
+  if (notificationId.startsWith("fast-down-success-")) {
+    const wakeUpMessage = { type: "WakeUp" };
+    console.log("Sending WakeUp to Native Host:", NATIVE_HOST);
+    chrome.runtime.sendNativeMessage(NATIVE_HOST, wakeUpMessage, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error(
+          "WakeUp Native Messaging Error:",
+          chrome.runtime.lastError.message,
+        );
+      } else {
+        console.log("WakeUp Response:", response);
+      }
+    });
+  } else if (notificationId.startsWith("fast-down-err-")) {
+    const data = await chrome.storage.local.get(notificationId);
+    const retryData = data[notificationId];
+    if (retryData) {
+      console.log("Retrying download for:", retryData.url);
+      download(retryData.url, retryData.headers);
+      chrome.storage.local.remove(notificationId);
     }
   }
-}
+});
+
+// 监听通知关闭事件
+chrome.notifications.onClosed.addListener((notificationId) => {
+  if (notificationId.startsWith("fast-down-err-")) {
+    chrome.storage.local.remove(notificationId);
+  }
+});
 
 // 更新图标状态
 function updateIcon() {

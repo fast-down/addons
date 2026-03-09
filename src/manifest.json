@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
   "name": "fast-down",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "description": "转发下载到 fast-down",
   "permissions": [
     "downloads",
     "storage",
     "cookies",
     "webRequest",
-    "notifications"
+    "notifications",
+    "nativeMessaging"
   ],
   "host_permissions": ["<all_urls>"],
   "background": {
