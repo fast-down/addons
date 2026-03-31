@@ -124,7 +124,7 @@ async function showLaunchNotification(url, headers) {
   await chrome.storage.local.set({ [localId]: { url, headers } });
   chrome.notifications.create(localId, {
     type: "basic",
-    iconUrl: chrome.runtime.getURL("icons/icon128.png"),
+    iconUrl: chrome.runtime.getURL("icons/disabled/icon128.png"),
     title: "fast-down 未启动",
     message: `请确保程序已安装并运行，点击此条重试。\n${url}`,
   });
