@@ -57,9 +57,15 @@ async function getCookies(url, referer) {
   res.push(...(await chrome.cookies.getAll({ domain })));
   console.log("getCookies self+domain", domain, res);
   if (referer) {
+    res.push(...(await chrome.cookies.getAll({ domain: referer })));
+    console.log("getCookies self+domain+referer", referer, res);
     const refererDomain = new URL(referer).host;
     res.push(...(await chrome.cookies.getAll({ domain: refererDomain })));
-    console.log("getCookies self+domain+referer", refererDomain, res);
+    console.log(
+      "getCookies self+domain+referer+refererDomain",
+      refererDomain,
+      res,
+    );
   }
   return res;
 }
