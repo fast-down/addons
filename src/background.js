@@ -41,8 +41,8 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
     .map(({ name, value }) => `${name}=${value}`)
     .join("; ");
   const headers = {
-    Referer: downloadItem.referrer,
     ...requestHeaders[url.href]?.headers,
+    Referer: downloadItem.referrer,
     Accept: downloadItem.mime,
   };
   if (cookieStr) headers.Cookie = cookieStr;
