@@ -1,5 +1,5 @@
-import { createWriteStream, promises as fs } from "fs";
-import path from "path";
+import { createWriteStream, promises as fs } from "node:fs";
+import path from "node:path";
 import archiver from "archiver";
 
 const srcDir = "src";
@@ -18,14 +18,14 @@ copyDir(srcDir, firefoxDir).then(async () => {
   const manifest = JSON.parse(await fs.readFile(manifestFile, "utf-8"));
   delete manifest.background.service_worker;
   await fs.writeFile(manifestFile, JSON.stringify(manifest, null, 2));
-  zipDir(firefoxDir, firefoxZip);
+  await zipDir(firefoxDir, firefoxZip);
 });
 copyDir(srcDir, chromeDir).then(async () => {
   const manifestFile = path.join(chromeDir, "manifest.json");
   const manifest = JSON.parse(await fs.readFile(manifestFile, "utf-8"));
   delete manifest.background.scripts;
   await fs.writeFile(manifestFile, JSON.stringify(manifest, null, 2));
-  zipDir(chromeDir, chromeZip);
+  await zipDir(chromeDir, chromeZip);
 });
 
 async function copyDir(srcDir: string, destDir: string) {
