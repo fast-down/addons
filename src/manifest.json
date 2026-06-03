@@ -17,6 +17,10 @@
     "service_worker": "background.js",
     "scripts": ["background.js"]
   },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "action": {
     "default_icon": {
       "128": "icons/icon128.png"

@@ -11,22 +11,22 @@ const STORAGE_KEY = "config";
 function buildConfig(raw) {
   return {
     isRunning: raw?.isRunning ?? true,
-    blockedLinks:
-      raw?.blockedLinks?.map((r) => ({
+    skippedLinks:
+      raw?.skippedLinks?.map((r) => ({
         pattern: r.pattern,
         enable: r.enable ?? true,
       })) ?? [],
-    blockedSites:
-      raw?.blockedSites?.map((r) => ({
+    skippedSites:
+      raw?.skippedSites?.map((r) => ({
         pattern: r.pattern,
         enable: r.enable ?? true,
       })) ?? [],
-    blockedHeaders:
-      raw?.blockedHeaders?.map((r) => ({
+    skippedHeaders:
+      raw?.skippedHeaders?.map((r) => ({
         pattern: r.pattern,
         enable: r.enable ?? true,
       })) ?? [],
-    blockedNoResumable: raw?.blockedNoResumable ?? true,
+    skippedNoResumable: raw?.skippedNoResumable ?? true,
   };
 }
 
@@ -71,7 +71,7 @@ setInterval(() => {
 
 // 监听下载事件
 chrome.downloads.onCreated.addListener(async (downloadItem) => {
-  if (isBlocked(downloadItem)) {
+  if (shouldSkip(downloadItem)) {
     return;
   }
   if (!downloadItem.url) {
@@ -154,7 +154,7 @@ function download(url, headers) {
   const headersString = Object.entries(headers)
     .filter(
       ([key]) =>
-        !config.blockedHeaders.some((rule) => {
+        !config.skippedHeaders.some((rule) => {
           if (rule.enable === false) {
             return false;
           }
@@ -258,10 +258,10 @@ function updateIcon() {
 }
 
 /** @param {chrome.downloads.DownloadItem} downloadItem */
-function isBlocked(downloadItem) {
+function shouldSkip(downloadItem) {
   if (
     config.isRunning === false ||
-    (config.blockedNoResumable && downloadItem.canResume === false)
+    (config.skippedNoResumable && downloadItem.canResume === false)
   ) {
     return true;
   }
@@ -281,5 +281,5 @@ function isBlocked(downloadItem) {
       return false;
     }
   };
-  return config.blockedSites.some(test) || config.blockedLinks.some(test);
+  return config.skippedSites.some(test) || config.skippedLinks.some(test);
 }
