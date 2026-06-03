@@ -1,40 +1,51 @@
-/** biome-ignore-all lint/suspicious/noConsole: addons can use console */
+// fast-down Service Worker
+// biome-ignore-all lint/suspicious/noConsole: service worker diagnostics
 
 if (typeof chrome === "undefined") {
-  chrome = browser;
+  globalThis.chrome = browser;
 }
 
 const NATIVE_HOST = "top.s121.fd";
+const STORAGE_KEY = "config";
 
-let config = {
-  isRunning: false,
+function buildConfig(raw) {
+  return {
+    isRunning: raw?.isRunning ?? true,
+    blockedLinks:
+      raw?.blockedLinks?.map((r) => ({
+        pattern: r.pattern,
+        enable: r.enable ?? true,
+      })) ?? [],
+    blockedSites:
+      raw?.blockedSites?.map((r) => ({
+        pattern: r.pattern,
+        enable: r.enable ?? true,
+      })) ?? [],
+    blockedHeaders:
+      raw?.blockedHeaders?.map((r) => ({
+        pattern: r.pattern,
+        enable: r.enable ?? true,
+      })) ?? [],
+    blockedNoResumable: raw?.blockedNoResumable ?? true,
+  };
+}
 
-  /** @type {{ reg: RegExp, enable: boolean }[]} */
-  blockedLinks: [],
+let config = buildConfig();
 
-  /** @type {{ reg: RegExp, enable: boolean }[]} */
-  blockedSites: [],
-
-  /** @type {{ reg: RegExp, enable: boolean }[]} */
-  blockedHeaders: [],
-
-  blockedNoResumable: true,
-};
-
-chrome.storage.local.get("config").then(({ config: result }) => {
-  if (result) {
-    config = result;
-  }
+chrome.storage.local.get(STORAGE_KEY).then(({ [STORAGE_KEY]: raw }) => {
+  config = buildConfig(raw);
   updateIcon();
 });
-chrome.storage.local.onChanged.addListener((change) => {
-  for (const [key, value] of Object.entries(change)) {
-    config[key] = value;
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName === "local" && changes[STORAGE_KEY]) {
+    config = buildConfig(changes[STORAGE_KEY].newValue);
+    updateIcon();
   }
-  updateIcon();
 });
+
 function updateConfig() {
-  return chrome.storage.local.set({ config });
+  return chrome.storage.local.set({ [STORAGE_KEY]: config });
 }
 
 // 点击图标切换拦截状态
@@ -44,7 +55,7 @@ chrome.action.onClicked.addListener(() => {
   updateIcon();
 });
 
-/** @type {Map<string, { headers: { [key: string]: string }, addTime: number }>} */
+/** @type {Map<string, { headers: Record<string, string>, addTime: number }>} */
 const requestHeaders = new Map();
 
 // 清理过期的请求头
@@ -63,7 +74,7 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
   if (isBlocked(downloadItem)) {
     return;
   }
-  const url = new URL(downloadItem.url || downloadItem.finalUrl);
+  const url = new URL(downloadItem.url);
   if (!["http:", "https:"].includes(url.protocol)) {
     return;
   }
@@ -76,7 +87,8 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
   const cookies = await getCookies(url.href, downloadItem.referrer);
   const cookieStr = cookies
     .map(({ name, value }) => `${name}=${value}`)
-    .join(";");
+    .join("; ");
+  /** @type {Record<string, string>} */
   const headers = {
     ...requestHeaders.get(url.href)?.headers,
     // biome-ignore lint/style/useNamingConvention: HTTP Headers
@@ -115,10 +127,13 @@ async function getCookies(url, referer) {
 chrome.webRequest.onSendHeaders.addListener(
   (details) => {
     if (details.requestHeaders && details.requestHeaders.length > 0) {
-      const headers = details.requestHeaders.reduce((acc, item) => {
-        acc[item.name] = item.value;
-        return acc;
-      }, {});
+      const headers = details.requestHeaders.reduce(
+        (acc, item) => {
+          acc[item.name] = item.value;
+          return acc;
+        },
+        /** @type {Record<string, string>} */ ({}),
+      );
       requestHeaders.set(details.url, {
         headers,
         addTime: Date.now(),
@@ -134,9 +149,16 @@ function download(url, headers) {
   const headersString = Object.entries(headers)
     .filter(
       ([key]) =>
-        !config.blockedHeaders.some(
-          (rule) => rule.enable && rule.reg.test(key),
-        ),
+        !config.blockedHeaders.some((rule) => {
+          if (rule.enable === false) {
+            return false;
+          }
+          try {
+            return new RegExp(rule.pattern, "u").test(key);
+          } catch {
+            return false;
+          }
+        }),
     )
     .map(([name, value]) => `${name}:${value}`)
     .join("\n");
@@ -238,11 +260,21 @@ function isBlocked(downloadItem) {
   ) {
     return true;
   }
-  /** @param {{ reg: RegExp, enable: boolean }} e */
-  const test = (e) =>
-    e.enable &&
-    (e.reg.test(downloadItem.url) ||
-      e.reg.test(downloadItem.finalUrl) ||
-      e.reg.test(downloadItem.referrer));
+  /** @param {{ pattern: string, enable: boolean }} e */
+  const test = (e) => {
+    if (e.enable === false) {
+      return false;
+    }
+    try {
+      const rep = new RegExp(e.pattern, "u");
+      return (
+        rep.test(downloadItem.url) ||
+        rep.test(downloadItem.finalUrl) ||
+        rep.test(downloadItem.referrer)
+      );
+    } catch {
+      return false;
+    }
+  };
   return config.blockedSites.some(test) || config.blockedLinks.some(test);
 }
