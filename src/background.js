@@ -1,51 +1,92 @@
-if (typeof chrome === "undefined") chrome = browser;
+/** biome-ignore-all lint/suspicious/noConsole: addons can use console */
+
+if (typeof chrome === "undefined") {
+  chrome = browser;
+}
 
 const NATIVE_HOST = "top.s121.fd";
 
-let isRunning = false;
-chrome.storage.local.get("isRunning").then((result) => {
-  isRunning = result?.isRunning ?? true;
+let config = {
+  isRunning: false,
+
+  /** @type {{ reg: RegExp, enable: boolean }[]} */
+  blockedLinks: [],
+
+  /** @type {{ reg: RegExp, enable: boolean }[]} */
+  blockedSites: [],
+
+  /** @type {{ reg: RegExp, enable: boolean }[]} */
+  blockedHeaders: [],
+
+  blockedNoResumable: true,
+};
+
+chrome.storage.local.get("config").then(({ config: result }) => {
+  if (result) {
+    config = result;
+  }
   updateIcon();
 });
+chrome.storage.local.onChanged.addListener((change) => {
+  for (const [key, value] of Object.entries(change)) {
+    config[key] = value;
+  }
+  updateIcon();
+});
+function updateConfig() {
+  return chrome.storage.local.set({ config });
+}
 
 // 点击图标切换拦截状态
-chrome.action.onClicked.addListener(async () => {
-  isRunning = !isRunning;
-  await chrome.storage.local.set({ isRunning });
+chrome.action.onClicked.addListener(() => {
+  config.isRunning = !config.isRunning;
+  updateConfig();
   updateIcon();
 });
 
-let requestHeaders = {};
+/** @type {Map<string, { headers: { [key: string]: string }, addTime: number }>} */
+const requestHeaders = new Map();
 
 // 清理过期的请求头
+const HEADER_LIFE_MS = 5000;
 setInterval(() => {
   const now = Date.now();
-  for (const key in requestHeaders) {
-    if (now - requestHeaders[key].addTime > 5000) {
-      delete requestHeaders[key];
+  for (const [key, value] of requestHeaders.entries()) {
+    if (now - value.addTime > HEADER_LIFE_MS) {
+      requestHeaders.delete(key);
     }
   }
-}, 6000);
+}, HEADER_LIFE_MS);
 
 // 监听下载事件
 chrome.downloads.onCreated.addListener(async (downloadItem) => {
-  if (!isRunning) return;
-  const url = new URL(downloadItem.finalUrl || downloadItem.url);
-  if (!["http:", "https:"].includes(url.protocol)) return;
-  await chrome.downloads.cancel(downloadItem.id).catch(() => {});
-  await chrome.downloads.removeFile(downloadItem.id).catch(() => {});
-  await chrome.downloads.erase({ id: downloadItem.id }).catch(() => {});
+  if (isBlocked(downloadItem)) {
+    return;
+  }
+  const url = new URL(downloadItem.url || downloadItem.finalUrl);
+  if (!["http:", "https:"].includes(url.protocol)) {
+    return;
+  }
+
+  await chrome.downloads.cancel(downloadItem.id).catch(console.warn);
+  await chrome.downloads.removeFile(downloadItem.id).catch(console.warn);
+  await chrome.downloads.erase({ id: downloadItem.id }).catch(console.warn);
   console.log("downloads.onCreated", downloadItem);
+
   const cookies = await getCookies(url.href, downloadItem.referrer);
   const cookieStr = cookies
     .map(({ name, value }) => `${name}=${value}`)
-    .join("; ");
+    .join(";");
   const headers = {
-    ...requestHeaders[url.href]?.headers,
+    ...requestHeaders.get(url.href)?.headers,
+    // biome-ignore lint/style/useNamingConvention: HTTP Headers
     Referer: downloadItem.referrer,
+    // biome-ignore lint/style/useNamingConvention: HTTP Headers
     Accept: downloadItem.mime,
   };
-  if (cookieStr) headers.Cookie = cookieStr;
+  if (cookieStr) {
+    headers.Cookie = cookieStr;
+  }
   download(url.href, headers);
 });
 
@@ -73,31 +114,32 @@ async function getCookies(url, referer) {
 // 获取 HTTP headers
 chrome.webRequest.onSendHeaders.addListener(
   (details) => {
-    if (details.requestHeaders?.length) {
+    if (details.requestHeaders && details.requestHeaders.length > 0) {
       const headers = details.requestHeaders.reduce((acc, item) => {
         acc[item.name] = item.value;
         return acc;
       }, {});
-      requestHeaders[details.url] = {
+      requestHeaders.set(details.url, {
         headers,
         addTime: Date.now(),
-      };
+      });
     }
   },
   { urls: ["<all_urls>"] },
   ["requestHeaders"],
 );
 
-// 格式化headers为字符串
-function formatHeaders(headers) {
-  return Object.entries(headers)
-    .map(([name, value]) => `${name}:${value}`)
-    .join("\n");
-}
-
 // 通过 Native Messaging 发送下载任务
 function download(url, headers) {
-  const headersString = formatHeaders(headers);
+  const headersString = Object.entries(headers)
+    .filter(
+      ([key]) =>
+        !config.blockedHeaders.some(
+          (rule) => rule.enable && rule.reg.test(key),
+        ),
+    )
+    .map(([name, value]) => `${name}:${value}`)
+    .join("\n");
   const message = { type: "Download", url, headers: headersString };
   console.log("Sending to Native Host:", NATIVE_HOST, message);
   chrome.runtime.sendNativeMessage(NATIVE_HOST, message, (response) => {
@@ -109,7 +151,7 @@ function download(url, headers) {
       showLaunchNotification(url, headers);
     } else {
       console.log("Response from Rust:", response);
-      if (response.status == "success") {
+      if (response.status === "success") {
         showSuccessNotification(url);
       } else {
         showLaunchNotification(url, headers);
@@ -120,7 +162,7 @@ function download(url, headers) {
 
 // 错误/未启动 通知提示
 async function showLaunchNotification(url, headers) {
-  const localId = "fast-down-err-" + Date.now();
+  const localId = `fast-down-err-${Date.now()}`;
   await chrome.storage.local.set({ [localId]: { url, headers } });
   chrome.notifications.create(localId, {
     type: "basic",
@@ -132,10 +174,11 @@ async function showLaunchNotification(url, headers) {
 
 // 成功 通知提示
 function showSuccessNotification(url) {
-  const localId = "fast-down-success-" + Date.now();
+  const localId = `fast-down-success-${Date.now()}`;
   chrome.notifications.create(localId, {
     type: "basic",
     iconUrl: chrome.runtime.getURL("icons/icon128.png"),
+    // biome-ignore lint/security/noSecrets: this is not a secret
     title: "下载已接管",
     message: `任务已成功发送到 fast-down，点击此处唤醒应用界面。\n${url}`,
   });
@@ -160,7 +203,7 @@ chrome.notifications.onClicked.addListener(async (notificationId) => {
     const data = await chrome.storage.local.get(notificationId);
     const retryData = data[notificationId];
     if (retryData) {
-      console.log("Retrying download for:", retryData.url);
+      console.log("Retrying download for:", retryData.url, retryData.headers);
       download(retryData.url, retryData.headers);
       chrome.storage.local.remove(notificationId);
     }
@@ -176,11 +219,30 @@ chrome.notifications.onClosed.addListener((notificationId) => {
 
 // 更新图标状态
 function updateIcon() {
-  const iconPath = isRunning ? "icons/" : "icons/disabled/";
+  // biome-ignore lint/nursery/noTernary: best choice
+  const iconPath = config.isRunning ? "icons/" : "icons/disabled/";
   chrome.action.setIcon({
     path: { 128: `${iconPath}icon128.png` },
   });
   chrome.action.setTitle({
-    title: `fast-down - ${isRunning ? "已启用" : "已禁用"}`,
+    // biome-ignore lint/nursery/noTernary: best choice
+    title: `fast-down - ${config.isRunning ? "已启用" : "已禁用"}`,
   });
+}
+
+/** @param {chrome.downloads.DownloadItem} downloadItem */
+function isBlocked(downloadItem) {
+  if (
+    config.isRunning === false ||
+    (config.blockedNoResumable && downloadItem.canResume === false)
+  ) {
+    return true;
+  }
+  /** @param {{ reg: RegExp, enable: boolean }} e */
+  const test = (e) =>
+    e.enable &&
+    (e.reg.test(downloadItem.url) ||
+      e.reg.test(downloadItem.finalUrl) ||
+      e.reg.test(downloadItem.referrer));
+  return config.blockedSites.some(test) || config.blockedLinks.some(test);
 }
