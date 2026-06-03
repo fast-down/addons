@@ -74,6 +74,9 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
   if (isBlocked(downloadItem)) {
     return;
   }
+  if (!downloadItem.url) {
+    return;
+  }
   const url = new URL(downloadItem.url);
   if (!["http:", "https:"].includes(url.protocol)) {
     return;
@@ -85,7 +88,9 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
   console.log("downloads.onCreated", downloadItem);
 
   const cookies = await getCookies(url.href, downloadItem.referrer);
+  const seen = new Set();
   const cookieStr = cookies
+    .filter(({ name }) => !seen.has(name) && seen.add(name))
     .map(({ name, value }) => `${name}=${value}`)
     .join("; ");
   /** @type {Record<string, string>} */
@@ -269,8 +274,8 @@ function isBlocked(downloadItem) {
       const rep = new RegExp(e.pattern, "u");
       return (
         rep.test(downloadItem.url) ||
-        rep.test(downloadItem.finalUrl) ||
-        rep.test(downloadItem.referrer)
+        (Boolean(downloadItem.finalUrl) && rep.test(downloadItem.finalUrl)) ||
+        (Boolean(downloadItem.referrer) && rep.test(downloadItem.referrer))
       );
     } catch {
       return false;
