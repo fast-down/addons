@@ -30,14 +30,7 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
     .map((c) => `${c.name}=${c.value}`)
     .join("; ");
 
-  /** @type {Record<string, string>} */
-  const headers = {
-    ...getCachedHeaders(url.href),
-    // biome-ignore lint/style/useNamingConvention: HTTP Header
-    Referer: downloadItem.referrer,
-    // biome-ignore lint/style/useNamingConvention: HTTP Header
-    Accept: downloadItem.mime,
-  };
+  const headers = { ...getCachedHeaders(url.href) };
   if (cookieStr) {
     headers.Cookie = cookieStr;
   }

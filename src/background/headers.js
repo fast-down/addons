@@ -17,13 +17,10 @@ setInterval(() => {
 chrome.webRequest.onSendHeaders.addListener(
   (details) => {
     if (details.requestHeaders && details.requestHeaders.length > 0) {
-      const headers = details.requestHeaders.reduce(
-        (acc, item) => {
-          acc[item.name] = item.value;
-          return acc;
-        },
-        /** @type {Record<string, string>} */ ({}),
-      );
+      const headers = details.requestHeaders.reduce((acc, item) => {
+        acc[item.name] = item.value;
+        return acc;
+      }, /** @type {Record<string, string>} */ ({}));
       requestHeaders.set(details.url, { headers, addTime: Date.now() });
     }
   },

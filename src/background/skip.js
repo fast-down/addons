@@ -11,7 +11,7 @@ export function shouldSkip(downloadItem) {
     return true;
   }
 
-  /** @param {import("./config.js").Rule} e */
+  /** @param {import("../shared/utils.js").Rule} e */
   const test = (e) => {
     if (e.enable === false) {
       return false;

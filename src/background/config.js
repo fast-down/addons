@@ -1,24 +1,10 @@
 // 常量和配置初始化
 
+import { buildConfig } from "../shared/utils.js";
 import { updateIcon } from "./icon.js";
 
 const NATIVE_HOST = "top.s121.fd";
 const STORAGE_KEY = "config";
-
-/**
- * @typedef {{
- *   pattern: string,
- *   enable: boolean,
- * }} Rule
- *
- * @typedef {{
- *   isRunning: boolean,
- *   skippedLinks: Rule[],
- *   skippedSites: Rule[],
- *   skippedHeaders: Rule[],
- *   skippedNoResumable: boolean,
- * }} Config
- */
 
 let config = buildConfig();
 
@@ -33,29 +19,6 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
     updateIcon();
   }
 });
-
-/** @param {Partial<Config>} [raw] */
-export function buildConfig(raw) {
-  return {
-    isRunning: raw?.isRunning ?? true,
-    skippedLinks:
-      raw?.skippedLinks?.map((r) => ({
-        pattern: r.pattern,
-        enable: r.enable ?? true,
-      })) ?? [],
-    skippedSites:
-      raw?.skippedSites?.map((r) => ({
-        pattern: r.pattern,
-        enable: r.enable ?? true,
-      })) ?? [],
-    skippedHeaders:
-      raw?.skippedHeaders?.map((r) => ({
-        pattern: r.pattern,
-        enable: r.enable ?? true,
-      })) ?? [],
-    skippedNoResumable: raw?.skippedNoResumable ?? true,
-  };
-}
 
 export function updateConfig() {
   return chrome.storage.local.set({ [STORAGE_KEY]: config });
