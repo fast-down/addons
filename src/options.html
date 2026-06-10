@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fast-down 设置</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+
+  <body>
+    <div class="container" x-data="options" x-cloak>
+      <header>
+        <h1>
+          <img
+            src="icons/icon128.png"
+            alt="logo"
+            class="logo"
+            width="32"
+            height="32"
+          />
+          fast-down 设置
+        </h1>
+      </header>
+
+      <main>
+        <!-- 常规 -->
+        <section class="card">
+          <h2>常规</h2>
+          <label class="toggle-row">
+            <input type="checkbox" x-model="config.skippedNoResumable" />
+            <span>跳过不支持断点续传的下载</span>
+          </label>
+        </section>
+
+        <!-- 三组规则 -->
+        <template x-for="section in sections" :key="section.prefix">
+          <section class="card">
+            <h2 x-text="section.title"></h2>
+            <p class="desc" x-text="section.desc"></p>
+
+            <div class="rule-list">
+              <div class="empty-hint" x-show="section.rules.length === 0">
+                暂无规则，点击下方添加
+              </div>
+              <template
+                x-for="(rule, idx) in section.rules"
+                :key="rule.pattern"
+              >
+                <div class="rule-item" :class="{ disabled: !rule.enable }">
+                  <input
+                    type="checkbox"
+                    class="rule-toggle"
+                    x-model="rule.enable"
+                    :title="rule.enable ? '已启用' : '已禁用'"
+                  />
+                  <code class="rule-pattern" x-text="rule.pattern"></code>
+                  <button
+                    type="button"
+                    class="rule-delete"
+                    title="删除"
+                    @click="section.rules.splice(idx, 1)"
+                  >
+                    &times;
+                  </button>
+                </div>
+              </template>
+            </div>
+
+            <div class="add-rule">
+              <input
+                type="text"
+                class="rule-input"
+                :class="{ error: section.addError }"
+                :placeholder="section.placeholder"
+                x-model="section.inputValue"
+                @keydown.enter="addRule(section)"
+              />
+              <button
+                type="button"
+                class="btn btn-add"
+                @click="addRule(section)"
+              >
+                添加
+              </button>
+            </div>
+            <div class="test-area">
+              <input
+                type="text"
+                class="test-input"
+                :placeholder="section.testPlaceholder"
+                x-model="section.testValue"
+                x-effect="testRule(section)"
+              />
+              <span
+                class="test-result"
+                :class="section.testClass"
+                x-text="section.testLabel"
+              ></span>
+            </div>
+          </section>
+        </template>
+      </main>
+    </div>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

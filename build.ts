@@ -1,5 +1,7 @@
-import { createWriteStream, promises as fs } from "fs";
-import path from "path";
+/** biome-ignore-all lint/correctness/noNodejsModules: This code only runs in bun. */
+
+import { createWriteStream, promises as fs } from "node:fs";
+import path from "node:path";
 import archiver from "archiver";
 
 const srcDir = "src";
@@ -16,20 +18,20 @@ await fs.mkdir(distDir);
 copyDir(srcDir, firefoxDir).then(async () => {
   const manifestFile = path.join(firefoxDir, "manifest.json");
   const manifest = JSON.parse(await fs.readFile(manifestFile, "utf-8"));
-  delete manifest.background.service_worker;
+  manifest.background.service_worker = undefined;
   await fs.writeFile(manifestFile, JSON.stringify(manifest, null, 2));
-  zipDir(firefoxDir, firefoxZip);
+  await zipDir(firefoxDir, firefoxZip);
 });
 copyDir(srcDir, chromeDir).then(async () => {
   const manifestFile = path.join(chromeDir, "manifest.json");
   const manifest = JSON.parse(await fs.readFile(manifestFile, "utf-8"));
-  delete manifest.background.scripts;
+  manifest.background.scripts = undefined;
   await fs.writeFile(manifestFile, JSON.stringify(manifest, null, 2));
-  zipDir(chromeDir, chromeZip);
+  await zipDir(chromeDir, chromeZip);
 });
 
-async function copyDir(srcDir: string, destDir: string) {
-  const files = await fs.readdir(srcDir, {
+async function copyDir(src: string, dest: string): Promise<void> {
+  const files = await fs.readdir(src, {
     recursive: true,
     withFileTypes: true,
   });
@@ -37,21 +39,21 @@ async function copyDir(srcDir: string, destDir: string) {
     .filter((file) => file.isFile())
     .map(async (file) => {
       const fileSrc = path.join(file.parentPath, file.name);
-      const fileRelative = path.relative(srcDir, file.parentPath);
-      const fileDestDir = path.join(destDir, fileRelative);
+      const fileRelative = path.relative(src, file.parentPath);
+      const fileDestDir = path.join(dest, fileRelative);
       const fileDest = path.join(fileDestDir, file.name);
       await fs.mkdir(fileDestDir, { recursive: true });
       await fs.copyFile(fileSrc, fileDest);
     });
-  return Promise.all(promises);
+  await Promise.all(promises);
 }
 
-function zipDir(srcDir: string, destZip: string) {
+function zipDir(src: string, destZip: string): Promise<void> {
   const archive = archiver("zip", { zlib: { level: 9 } });
   const stream = createWriteStream(destZip);
-  return new Promise<void>((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     archive
-      .directory(srcDir, false)
+      .directory(src, false)
       .on("error", (err) => reject(err))
       .pipe(stream);
     stream.on("close", resolve);

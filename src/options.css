@@ -1,0 +1,292 @@
+/* fast-down 设置页面样式 */
+/* biome-ignore-all lint/nursery/useBaseline: acceptable */
+/* biome-ignore-all lint/nursery/noExcessiveLinesPerFile: acceptable */
+
+:root {
+  --bg: rgb(245, 245, 247);
+  --card-bg: rgb(255, 255, 255);
+  --text: rgb(29, 29, 31);
+  --text-secondary: rgb(110, 110, 115);
+  --border: rgb(210, 210, 215);
+  --accent: rgb(0, 113, 227);
+  --accent-hover: rgb(0, 119, 237);
+  --danger: rgb(255, 59, 48);
+  --danger-hover: rgb(224, 53, 43);
+  --danger-bg: rgb(255, 242, 240);
+  --success: rgb(52, 199, 89);
+  --success-bg: rgb(234, 252, 239);
+  --input-bg: rgb(255, 255, 255);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --transition: 0.15s ease;
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: rgb(28, 28, 30);
+    --card-bg: rgb(44, 44, 46);
+    --text: rgb(255, 255, 255);
+    --text-secondary: rgb(174, 174, 178);
+    --border: rgb(84, 84, 88);
+    --accent: rgb(10, 132, 255);
+    --accent-hover: rgb(64, 156, 255);
+    --danger: rgb(255, 69, 58);
+    --danger-hover: rgb(255, 105, 97);
+    --danger-bg: rgb(60, 20, 20);
+    --success: rgb(48, 209, 88);
+    --success-bg: rgb(20, 60, 30);
+    --input-bg: rgb(44, 44, 46);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.container {
+  padding: 24px 20px 32px;
+}
+
+/* 头部 */
+header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logo {
+  border-radius: 6px;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.card h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+/* 开关行 */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-row input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+/* 规则列表 */
+.rule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.rule-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: border-color var(--transition);
+}
+
+.rule-item:hover {
+  border-color: var(--border);
+}
+
+.rule-pattern {
+  flex: 1;
+  font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+  font-size: 13px;
+  word-break: break-all;
+  min-width: 0;
+}
+
+.rule-item.disabled .rule-pattern {
+  text-decoration: line-through;
+  opacity: 0.4;
+}
+
+.rule-toggle {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.rule-delete {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.rule-delete:hover {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.empty-hint {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 16px 0;
+  margin-bottom: 8px;
+}
+
+.empty-hint.hidden {
+  display: none;
+}
+
+/* 添加规则 */
+.add-rule {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.rule-input {
+  flex: 1;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.rule-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
+}
+
+.rule-input.error {
+  border-color: var(--danger);
+}
+
+.btn {
+  height: 34px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+
+.btn-add {
+  background: var(--accent);
+  color: white;
+}
+.btn-add:hover {
+  background: var(--accent-hover);
+}
+.btn-add:active {
+  transform: scale(0.97);
+}
+
+/* 测试区域 */
+.test-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.test-input {
+  flex: 1;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.test-input:focus {
+  border-color: var(--accent);
+}
+
+.test-result {
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 36px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.test-result.match {
+  color: var(--danger);
+}
+.test-result.no-match {
+  color: var(--success);
+}

@@ -10,12 +10,18 @@
     "cookies",
     "webRequest",
     "notifications",
-    "nativeMessaging"
+    "nativeMessaging",
+    "tabs"
   ],
   "host_permissions": ["<all_urls>"],
   "background": {
-    "service_worker": "background.js",
-    "scripts": ["background.js"]
+    "service_worker": "background/index.js",
+    "scripts": ["background/index.js"],
+    "type": "module"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
   },
   "action": {
     "default_icon": {
