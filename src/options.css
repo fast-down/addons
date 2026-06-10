@@ -1,4 +1,5 @@
 /* fast-down 设置页面样式 */
+/* biome-ignore-all lint/nursery/useBaseline: acceptable */
 /* biome-ignore-all lint/nursery/noExcessiveLinesPerFile: acceptable */
 
 :root {
@@ -110,24 +111,14 @@ header h1 {
   gap: 8px;
   font-size: 14px;
   cursor: pointer;
-}
-
-@supports (user-select: none) {
-  .toggle-row {
-    user-select: none;
-  }
+  user-select: none;
 }
 
 .toggle-row input[type="checkbox"] {
   width: 17px;
   height: 17px;
   cursor: pointer;
-}
-
-@supports (accent-color: auto) {
-  .toggle-row input[type="checkbox"] {
-    accent-color: var(--accent);
-  }
+  accent-color: var(--accent);
 }
 
 /* 规则列表 */
@@ -171,12 +162,7 @@ header h1 {
   width: 17px;
   height: 17px;
   cursor: pointer;
-}
-
-@supports (accent-color: auto) {
-  .rule-toggle {
-    accent-color: var(--accent);
-  }
+  accent-color: var(--accent);
 }
 
 .rule-delete {
@@ -303,22 +289,4 @@ header h1 {
 }
 .test-result.no-match {
   color: var(--success);
-}
-
-/* 底部 */
-footer {
-  text-align: center;
-  padding-top: 8px;
-}
-.save-status {
-  font-size: 12px;
-  color: var(--text-secondary);
-  transition: color var(--transition);
-}
-
-.save-status.saved {
-  color: var(--success);
-}
-.save-status.error {
-  color: var(--danger);
 }

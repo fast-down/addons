@@ -1,6 +1,6 @@
 // 请求头缓存
 
-const HEADER_LIFE_MS = 5000;
+const HEADER_TTL = 60_000;
 
 /** @type {Map<string, { headers: Record<string, string>, addTime: number }>} */
 const requestHeaders = new Map();
@@ -8,11 +8,11 @@ const requestHeaders = new Map();
 setInterval(() => {
   const now = Date.now();
   requestHeaders.forEach((value, key) => {
-    if (now - value.addTime > HEADER_LIFE_MS) {
+    if (now - value.addTime > HEADER_TTL) {
       requestHeaders.delete(key);
     }
   });
-}, HEADER_LIFE_MS);
+}, HEADER_TTL);
 
 chrome.webRequest.onSendHeaders.addListener(
   (details) => {
@@ -36,5 +36,3 @@ export function getCachedHeaders(url) {
   }
   return {};
 }
-
-export { requestHeaders };

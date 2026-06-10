@@ -2,10 +2,9 @@
 // biome-ignore-all lint/suspicious/noAlert: I like it
 // biome-ignore-all lint/security/noSecrets: ui strings
 
-import { buildConfig } from "./shared/utils.js";
+import { STORAGE_KEY } from "./shared/constants.js";
+import { buildConfig, buildRegExp } from "./shared/utils.js";
 import Alpine from "./vendor/alpine.js";
-
-const STORAGE_KEY = "config";
 
 // biome-ignore lint/complexity/noExcessiveLinesPerFunction: app logic
 Alpine.data("options", () => {
@@ -80,14 +79,14 @@ Alpine.data("options", () => {
         return;
       }
       try {
-        const _ = new RegExp(pattern, "u");
+        const _ = buildRegExp(pattern);
       } catch (e) {
         section.addError = true;
-        alert(`/${pattern}/u 正则语法错误：${e.message}`);
+        alert(`/${pattern}/ui 正则语法错误：${e.message}`);
         return;
       }
       if (section.rules.some((r) => r.pattern === pattern)) {
-        alert(`/${pattern}/u 规则已存在`);
+        alert(`/${pattern}/ui 规则已存在`);
         return;
       }
       section.rules.push({ pattern, enable: true });
@@ -110,12 +109,12 @@ Alpine.data("options", () => {
       let matched = false;
       for (const rule of enabled) {
         try {
-          if (new RegExp(rule.pattern, "u").test(testValue)) {
+          if (buildRegExp(rule.pattern).test(testValue)) {
             matched = true;
             break;
           }
         } catch (e) {
-          alert(`/${rule.pattern}/u 正则语法错误：${e.message}`);
+          alert(`/${rule.pattern}/ui 正则语法错误：${e.message}`);
         }
       }
 

@@ -15,6 +15,19 @@
  * }} Config
  */
 
+const regCache = new Map();
+
+/** @param {string} pattern */
+export function buildRegExp(pattern) {
+  let reg = regCache.get(pattern);
+  if (reg) {
+    return reg;
+  }
+  reg = new RegExp(pattern, "ui");
+  regCache.set(pattern, reg);
+  return reg;
+}
+
 /** @param {Partial<Config>} [raw] */
 export function buildConfig(raw) {
   return {

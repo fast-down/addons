@@ -1,7 +1,7 @@
 // Native Messaging + 通知
 // biome-ignore-all lint/suspicious/noConsole: service worker diagnostics
 
-import { NATIVE_HOST } from "./config.js";
+import { NATIVE_HOST } from "../shared/constants.js";
 import { shouldSkipHeader } from "./skip.js";
 
 let queue = Promise.resolve();

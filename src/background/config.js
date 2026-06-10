@@ -1,10 +1,8 @@
 // 常量和配置初始化
 
+import { STORAGE_KEY } from "../shared/constants.js";
 import { buildConfig } from "../shared/utils.js";
 import { updateIcon } from "./icon.js";
-
-const NATIVE_HOST = "top.s121.fd";
-const STORAGE_KEY = "config";
 
 let config = buildConfig();
 
@@ -24,4 +22,4 @@ export function updateConfig() {
   return chrome.storage.local.set({ [STORAGE_KEY]: config });
 }
 
-export { config, NATIVE_HOST, STORAGE_KEY };
+export { config };

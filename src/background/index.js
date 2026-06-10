@@ -13,7 +13,7 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
     return;
   }
 
-  const url = new URL(downloadItem.url);
+  const url = new URL(downloadItem.finalUrl || downloadItem.url);
   if (!["http:", "https:"].includes(url.protocol)) {
     return;
   }

@@ -10,7 +10,8 @@
     "cookies",
     "webRequest",
     "notifications",
-    "nativeMessaging"
+    "nativeMessaging",
+    "tabs"
   ],
   "host_permissions": ["<all_urls>"],
   "background": {
