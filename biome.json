@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -14,15 +14,13 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "a11y": "on",
-      "complexity": "on",
-      "correctness": "on",
-      "nursery": "on",
-      "performance": "on",
-      "security": "on",
-      "style": "on",
-      "suspicious": "on"
+      "preset": "all",
+      "suspicious": {
+        "noImportCycles": "off"
+      },
+      "correctness": {
+        "useQwikValidLexicalScope": "off"
+      }
     }
   },
   "javascript": {

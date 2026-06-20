@@ -1,12 +1,6 @@
 // 图标状态管理
 
-import { config, updateConfig } from "./config.js";
-
-chrome.action.onClicked.addListener(() => {
-  config.isRunning = !config.isRunning;
-  updateConfig();
-  updateIcon();
-});
+import { config } from "./config.js";
 
 export function updateIcon() {
   if (config.isRunning) {

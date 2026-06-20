@@ -1,0 +1,149 @@
+/* biome-ignore-all lint/nursery/useBaseline: acceptable */
+
+:root {
+  --bg: rgb(245, 245, 247);
+  --card-bg: rgb(255, 255, 255);
+  --text: rgb(29, 29, 31);
+  --text-secondary: rgb(110, 110, 115);
+  --border: rgb(210, 210, 215);
+  --accent: rgb(0, 113, 227);
+  --accent-hover: rgb(0, 119, 237);
+  --disabled-bg: rgb(229, 229, 234);
+  --disabled-text: rgb(142, 142, 147);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --transition: 0.15s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: rgb(28, 28, 30);
+    --card-bg: rgb(44, 44, 46);
+    --text: rgb(255, 255, 255);
+    --text-secondary: rgb(174, 174, 178);
+    --border: rgb(84, 84, 88);
+    --accent: rgb(10, 132, 255);
+    --accent-hover: rgb(64, 156, 255);
+    --disabled-bg: rgb(58, 58, 60);
+    --disabled-text: rgb(152, 152, 157);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  width: 280px;
+  padding: 20px 20px 16px;
+  line-height: 1.5;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.logo {
+  border-radius: 6px;
+}
+
+header h1 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* 主开关按钮 */
+.toggle-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  height: 56px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: all var(--transition);
+  user-select: none;
+  margin-bottom: 14px;
+}
+
+.toggle-btn:hover {
+  border-color: var(--accent);
+}
+
+.toggle-btn:active {
+  transform: scale(0.97);
+}
+
+.toggle-btn.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.toggle-btn.on:hover {
+  background: var(--accent-hover);
+}
+
+.toggle-btn.off {
+  background: var(--disabled-bg);
+  color: var(--disabled-text);
+}
+
+.toggle-hint {
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+}
+
+.settings-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.settings-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.settings-btn:active {
+  transform: scale(0.97);
+}

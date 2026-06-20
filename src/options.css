@@ -1,6 +1,5 @@
 /* fast-down 设置页面样式 */
 /* biome-ignore-all lint/nursery/useBaseline: acceptable */
-/* biome-ignore-all lint/nursery/noExcessiveLinesPerFile: acceptable */
 
 :root {
   --bg: rgb(245, 245, 247);

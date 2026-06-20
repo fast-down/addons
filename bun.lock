@@ -8,44 +8,44 @@
         "archiver": "^7.0.1",
       },
       "devDependencies": {
-        "@biomejs/biome": "2.4.16",
-        "@types/archiver": "^6.0.3",
+        "@biomejs/biome": "2.5.0",
+        "@types/archiver": "^6.0.4",
         "@types/bun": "latest",
-        "@types/chrome": "^0.1.42",
+        "@types/chrome": "^0.1.43",
       },
       "peerDependencies": {
-        "typescript": "^5",
+        "typescript": "^5.9.2",
       },
     },
   },
   "packages": {
-    "@biomejs/biome": ["@biomejs/biome@2.4.16", "https://registry.npmmirror.com/@biomejs/biome/-/biome-2.4.16.tgz", { "optionalDependencies": { "@biomejs/cli-darwin-arm64": "2.4.16", "@biomejs/cli-darwin-x64": "2.4.16", "@biomejs/cli-linux-arm64": "2.4.16", "@biomejs/cli-linux-arm64-musl": "2.4.16", "@biomejs/cli-linux-x64": "2.4.16", "@biomejs/cli-linux-x64-musl": "2.4.16", "@biomejs/cli-win32-arm64": "2.4.16", "@biomejs/cli-win32-x64": "2.4.16" }, "bin": { "biome": "bin/biome" } }, "sha512-x9ajFh1zChVybCiM3TN6OD4phAqLgtPZjFrZF+aTMYCPjwBO+k529TX7PPsAqtGNLeV4UgzwQnowEgS7bGmzcA=="],
+    "@biomejs/biome": ["@biomejs/biome@2.5.0", "https://registry.npmmirror.com/@biomejs/biome/-/biome-2.5.0.tgz", { "optionalDependencies": { "@biomejs/cli-darwin-arm64": "2.5.0", "@biomejs/cli-darwin-x64": "2.5.0", "@biomejs/cli-linux-arm64": "2.5.0", "@biomejs/cli-linux-arm64-musl": "2.5.0", "@biomejs/cli-linux-x64": "2.5.0", "@biomejs/cli-linux-x64-musl": "2.5.0", "@biomejs/cli-win32-arm64": "2.5.0", "@biomejs/cli-win32-x64": "2.5.0" }, "bin": { "biome": "bin/biome" } }, "sha512-4kURkd9hAPrdDM3C9n82ycYgx8hvQcW6MjKTEejruj8rK0N8P3OPpdy8BvI8kt3KWY4ycF5XtDOrktetEfhfuw=="],
 
-    "@biomejs/cli-darwin-arm64": ["@biomejs/cli-darwin-arm64@2.4.16", "https://registry.npmmirror.com/@biomejs/cli-darwin-arm64/-/cli-darwin-arm64-2.4.16.tgz", { "os": "darwin", "cpu": "arm64" }, "sha512-wxPvu4XOA85YJk9ixSWUmq/QBHbid85BISbOAqqBM/5xQpPk9ayjk5375tOlSC0BeCwNSbPFafQBm+vBumXq0A=="],
+    "@biomejs/cli-darwin-arm64": ["@biomejs/cli-darwin-arm64@2.5.0", "https://registry.npmmirror.com/@biomejs/cli-darwin-arm64/-/cli-darwin-arm64-2.5.0.tgz", { "os": "darwin", "cpu": "arm64" }, "sha512-Mn3Fwi3SA5fgmfCPqmzpWF2DLZnms3BVAhM088nTnGrTZmHS3wwIjcoZPqpXeNgd3DrrLH6xp8vTLIBuJoZiXw=="],
 
-    "@biomejs/cli-darwin-x64": ["@biomejs/cli-darwin-x64@2.4.16", "https://registry.npmmirror.com/@biomejs/cli-darwin-x64/-/cli-darwin-x64-2.4.16.tgz", { "os": "darwin", "cpu": "x64" }, "sha512-xFCqGPwYusQJp4N4NJLi1XJiZqjwFdjhT+KqtNy+Ug3qgfczqnTa6MSDvxJF6TkuDLoYJItMapz6tAf7kCekFw=="],
+    "@biomejs/cli-darwin-x64": ["@biomejs/cli-darwin-x64@2.5.0", "https://registry.npmmirror.com/@biomejs/cli-darwin-x64/-/cli-darwin-x64-2.5.0.tgz", { "os": "darwin", "cpu": "x64" }, "sha512-rg3VPL5P8mYro6pqlXYXuJWph21slVp3SZtAqWSrkZs40d2gTzYmHF8E/X1iTID25btmNKltNDJ926sqVBp7DQ=="],
 
-    "@biomejs/cli-linux-arm64": ["@biomejs/cli-linux-arm64@2.4.16", "https://registry.npmmirror.com/@biomejs/cli-linux-arm64/-/cli-linux-arm64-2.4.16.tgz", { "os": "linux", "cpu": "arm64" }, "sha512-2kFb4//jxfZaP6D+Rj5VkHkxgyD9EoRAVBEQb8PKRv+s4NO2zYNJKXFaJmK1CmhufJOWEfpHKaRbOja7qjmdhQ=="],
+    "@biomejs/cli-linux-arm64": ["@biomejs/cli-linux-arm64@2.5.0", "https://registry.npmmirror.com/@biomejs/cli-linux-arm64/-/cli-linux-arm64-2.5.0.tgz", { "os": "linux", "cpu": "arm64" }, "sha512-tl+LW8fdD96/xdeWtWwc82LIOc5CoY7N2AsogLTp5R4ECErYt+8Jl/N68ezN9vzSiqPTxw6vjcihoLPYKZHrlw=="],
 
-    "@biomejs/cli-linux-arm64-musl": ["@biomejs/cli-linux-arm64-musl@2.4.16", "https://registry.npmmirror.com/@biomejs/cli-linux-arm64-musl/-/cli-linux-arm64-musl-2.4.16.tgz", { "os": "linux", "cpu": "arm64" }, "sha512-oYxnW0ARfJkr72ezzF2OR8N/rtkgLUQeYtF8cFhVswbknHxtTcmzSsanVJP8yQKnGpGpc2ck6c5zLvHahL6Cbg=="],
+    "@biomejs/cli-linux-arm64-musl": ["@biomejs/cli-linux-arm64-musl@2.5.0", "https://registry.npmmirror.com/@biomejs/cli-linux-arm64-musl/-/cli-linux-arm64-musl-2.5.0.tgz", { "os": "linux", "cpu": "arm64" }, "sha512-vQdM4oSGaf7ZNeGO9w5+Y8SBtyser9M6znxYbm7Ec8wInxJu1WiKxFYZW5Auj2d80bcVvefuGGRxoFOE0eee8g=="],
 
-    "@biomejs/cli-linux-x64": ["@biomejs/cli-linux-x64@2.4.16", "https://registry.npmmirror.com/@biomejs/cli-linux-x64/-/cli-linux-x64-2.4.16.tgz", { "os": "linux", "cpu": "x64" }, "sha512-NbcBbi/nJqn5baae6wqRXdS7Gadf2uRpehSh6vMSYpG8OhkXl/Xg8aorWrJ+9VWqAT5ml90alLvorkpMW0nBwQ=="],
+    "@biomejs/cli-linux-x64": ["@biomejs/cli-linux-x64@2.5.0", "https://registry.npmmirror.com/@biomejs/cli-linux-x64/-/cli-linux-x64-2.5.0.tgz", { "os": "linux", "cpu": "x64" }, "sha512-zpEGf4RQbFEh8Vt7OmavLyyOzRbtcE9osCqrS1kfvt8jDvxwhKXLSf7n0ebr/ov0RJ9ssP+lhs6C8a9WwFvrQA=="],
 
-    "@biomejs/cli-linux-x64-musl": ["@biomejs/cli-linux-x64-musl@2.4.16", "https://registry.npmmirror.com/@biomejs/cli-linux-x64-musl/-/cli-linux-x64-musl-2.4.16.tgz", { "os": "linux", "cpu": "x64" }, "sha512-iHDS+MCM65DPqWGu+ECC3uoALyj2H7F4nVUPxIPjz/PIl94EUu+EDfGZDzFP+NY1EOPVt9NQvwFqq7HdMmowdg=="],
+    "@biomejs/cli-linux-x64-musl": ["@biomejs/cli-linux-x64-musl@2.5.0", "https://registry.npmmirror.com/@biomejs/cli-linux-x64-musl/-/cli-linux-x64-musl-2.5.0.tgz", { "os": "linux", "cpu": "x64" }, "sha512-+9hIcMngJ+yGUahXqZuZ8CoWKJE9SAZsFsM3QDvXpNsLbXZ9lqVzgBhOk/jTSYkOA0GLP9eu3teukqpLUojHMg=="],
 
-    "@biomejs/cli-win32-arm64": ["@biomejs/cli-win32-arm64@2.4.16", "https://registry.npmmirror.com/@biomejs/cli-win32-arm64/-/cli-win32-arm64-2.4.16.tgz", { "os": "win32", "cpu": "arm64" }, "sha512-0rgImMsNb5v/chhkIFe3wu7PEFClS6RBAYUijGL9UsYN3PanSaoK24HSSuSJb1pYbYYVjzAyZTl3gtjJ84BM8A=="],
+    "@biomejs/cli-win32-arm64": ["@biomejs/cli-win32-arm64@2.5.0", "https://registry.npmmirror.com/@biomejs/cli-win32-arm64/-/cli-win32-arm64-2.5.0.tgz", { "os": "win32", "cpu": "arm64" }, "sha512-jB0wAvTLI4itx5VidqVUejPQFhRUxiZ9l9FvZ26D5fl6t3qme+ZB4PD3bTSeL1vZ8NI2Rx/zj6H9zcESuGHKGw=="],
 
-    "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.4.16", "https://registry.npmmirror.com/@biomejs/cli-win32-x64/-/cli-win32-x64-2.4.16.tgz", { "os": "win32", "cpu": "x64" }, "sha512-Kp85jgoBHa05gix6UIRjfCDiUV3w/8VIdZ247VyyO2gEjaw12WEVhdIjlxp/AMzXxqxQwbxNTDVZ3Mwd2RG5rw=="],
+    "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.5.0", "https://registry.npmmirror.com/@biomejs/cli-win32-x64/-/cli-win32-x64-2.5.0.tgz", { "os": "win32", "cpu": "x64" }, "sha512-VT/lF+GId+67j8aDfLkxdxNoVApsPSTbyAtB3jJq0IWTrY77WXfbPfpngxq0bA6JCEv/7k8C9qWjDRKRznDlyw=="],
 
     "@isaacs/cliui": ["@isaacs/cliui@8.0.2", "https://registry.npmmirror.com/@isaacs/cliui/-/cliui-8.0.2.tgz", { "dependencies": { "string-width": "^5.1.2", "string-width-cjs": "npm:string-width@^4.2.0", "strip-ansi": "^7.0.1", "strip-ansi-cjs": "npm:strip-ansi@^6.0.1", "wrap-ansi": "^8.1.0", "wrap-ansi-cjs": "npm:wrap-ansi@^7.0.0" } }, "sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA=="],
 
     "@pkgjs/parseargs": ["@pkgjs/parseargs@0.11.0", "https://registry.npmmirror.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz", {}, "sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg=="],
 
-    "@types/archiver": ["@types/archiver@6.0.3", "https://registry.npmmirror.com/@types/archiver/-/archiver-6.0.3.tgz", { "dependencies": { "@types/readdir-glob": "*" } }, "sha512-a6wUll6k3zX6qs5KlxIggs1P1JcYJaTCx2gnlr+f0S1yd2DoaEwoIK10HmBaLnZwWneBz+JBm0dwcZu0zECBcQ=="],
+    "@types/archiver": ["@types/archiver@6.0.4", "https://registry.npmmirror.com/@types/archiver/-/archiver-6.0.4.tgz", { "dependencies": { "@types/readdir-glob": "*" } }, "sha512-ULdQpARQ3sz9WH4nb98mJDYA0ft2A8C4f4fovvUcFwINa1cgGjY36JCAYuP5YypRq4mco1lJp1/7jEMS2oR0Hg=="],
 
-    "@types/bun": ["@types/bun@1.2.20", "https://registry.npmmirror.com/@types/bun/-/bun-1.2.20.tgz", { "dependencies": { "bun-types": "1.2.20" } }, "sha512-dX3RGzQ8+KgmMw7CsW4xT5ITBSCrSbfHc36SNT31EOUg/LA9JWq0VDdEXDRSe1InVWpd2yLUM1FUF/kEOyTzYA=="],
+    "@types/bun": ["@types/bun@1.3.14", "https://registry.npmmirror.com/@types/bun/-/bun-1.3.14.tgz", { "dependencies": { "bun-types": "1.3.14" } }, "sha512-h1hFqFVcvAvD9j9K7ZW7vd82aSA+rTdznZa+5bwvCwqSB1jmmfLcbIWhOLx1/+boy/xmjgCs/OMUL8hRJSmnPw=="],
 
-    "@types/chrome": ["@types/chrome@0.1.42", "https://registry.npmmirror.com/@types/chrome/-/chrome-0.1.42.tgz", { "dependencies": { "@types/filesystem": "*", "@types/har-format": "*" } }, "sha512-tdT2roFqGecZZDjA9fUEAINb2STxSPifHMDvY6EfRjNRCjdrs/0FwKt5RCIA9MKMd1arAYZZL3nwEkp6ZLZu2w=="],
+    "@types/chrome": ["@types/chrome@0.1.43", "https://registry.npmmirror.com/@types/chrome/-/chrome-0.1.43.tgz", { "dependencies": { "@types/filesystem": "*", "@types/har-format": "*" } }, "sha512-ukH/HhmR6ht+UTX3PLUWJxgJ/RQcK2Foj4lBzsF24SIWsXgqhGuXqjd8FFuwioPP7d/JUKLM4g8GZxw3F4HTcA=="],
 
     "@types/filesystem": ["@types/filesystem@0.0.36", "https://registry.npmmirror.com/@types/filesystem/-/filesystem-0.0.36.tgz", { "dependencies": { "@types/filewriter": "*" } }, "sha512-vPDXOZuannb9FZdxgHnqSwAG/jvdGM8Wq+6N4D/d80z+D4HWH+bItqsZaVRQykAn6WEVeEkLm2oQigyHtgb0RA=="],
 
@@ -54,8 +54,6 @@
     "@types/har-format": ["@types/har-format@1.2.16", "https://registry.npmmirror.com/@types/har-format/-/har-format-1.2.16.tgz", {}, "sha512-fluxdy7ryD3MV6h8pTfTYpy/xQzCFC7m89nOH9y94cNqJ1mDIDPut7MnRHI3F6qRmh/cT2fUjG1MLdCNb4hE9A=="],
 
     "@types/node": ["@types/node@24.3.0", "https://registry.npmmirror.com/@types/node/-/node-24.3.0.tgz", { "dependencies": { "undici-types": "~7.10.0" } }, "sha512-aPTXCrfwnDLj4VvXrm+UUCQjNEvJgNA8s5F1cvwQU+3KNltTOkBm1j30uNLyqqPNe7gE3KFzImYoZEfLhp4Yow=="],
-
-    "@types/react": ["@types/react@19.1.11", "https://registry.npmmirror.com/@types/react/-/react-19.1.11.tgz", { "dependencies": { "csstype": "^3.0.2" } }, "sha512-lr3jdBw/BGj49Eps7EvqlUaoeA0xpj3pc0RoJkHpYaCHkVK7i28dKyImLQb3JVlqs3aYSXf7qYuWOW/fgZnTXQ=="],
 
     "@types/readdir-glob": ["@types/readdir-glob@1.1.5", "https://registry.npmmirror.com/@types/readdir-glob/-/readdir-glob-1.1.5.tgz", { "dependencies": { "@types/node": "*" } }, "sha512-raiuEPUYqXu+nvtY2Pe8s8FEmZ3x5yAH4VkLdihcPdalvsHltomrRC9BzuStrJ9yk06470hS0Crw0f1pXqD+Hg=="],
 
@@ -85,7 +83,7 @@
 
     "buffer-crc32": ["buffer-crc32@1.0.0", "https://registry.npmmirror.com/buffer-crc32/-/buffer-crc32-1.0.0.tgz", {}, "sha512-Db1SbgBS/fg/392AblrMJk97KggmvYhr4pB5ZIMTWtaivCPMWLkmb7m21cJvpvgK+J3nsU2CmmixNBZx4vFj/w=="],
 
-    "bun-types": ["bun-types@1.2.20", "https://registry.npmmirror.com/bun-types/-/bun-types-1.2.20.tgz", { "dependencies": { "@types/node": "*" }, "peerDependencies": { "@types/react": "^19" } }, "sha512-pxTnQYOrKvdOwyiyd/7sMt9yFOenN004Y6O4lCcCUoKVej48FS5cvTw9geRaEcB9TsDZaJKAxPTVvi8tFsVuXA=="],
+    "bun-types": ["bun-types@1.3.14", "https://registry.npmmirror.com/bun-types/-/bun-types-1.3.14.tgz", { "dependencies": { "@types/node": "*" } }, "sha512-4N0ig0fEomHt5R0KCFWjovxow98rIoRwKolrYdCcknNwMekCXRnWEUvgu5soYV8QXtVsrUD8B95MBOZGPvr6KQ=="],
 
     "color-convert": ["color-convert@2.0.1", "https://registry.npmmirror.com/color-convert/-/color-convert-2.0.1.tgz", { "dependencies": { "color-name": "~1.1.4" } }, "sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ=="],
 
@@ -100,8 +98,6 @@
     "crc32-stream": ["crc32-stream@6.0.0", "https://registry.npmmirror.com/crc32-stream/-/crc32-stream-6.0.0.tgz", { "dependencies": { "crc-32": "^1.2.0", "readable-stream": "^4.0.0" } }, "sha512-piICUB6ei4IlTv1+653yq5+KoqfBYmj9bw6LqXoOneTMDXk5nM1qt12mFW1caG3LlJXEKW1Bp0WggEmIfQB34g=="],
 
     "cross-spawn": ["cross-spawn@7.0.6", "https://registry.npmmirror.com/cross-spawn/-/cross-spawn-7.0.6.tgz", { "dependencies": { "path-key": "^3.1.0", "shebang-command": "^2.0.0", "which": "^2.0.1" } }, "sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA=="],
-
-    "csstype": ["csstype@3.1.3", "https://registry.npmmirror.com/csstype/-/csstype-3.1.3.tgz", {}, "sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw=="],
 
     "eastasianwidth": ["eastasianwidth@0.2.0", "https://registry.npmmirror.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz", {}, "sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA=="],
 
