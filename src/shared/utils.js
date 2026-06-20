@@ -42,11 +42,15 @@ export function buildConfig(raw) {
         pattern: r.pattern,
         enable: r.enable ?? true,
       })) ?? [],
-    skippedHeaders:
-      raw?.skippedHeaders?.map?.((r) => ({
-        pattern: r.pattern,
-        enable: r.enable ?? true,
-      })) ?? [],
+    skippedHeaders: raw?.skippedHeaders?.map?.((r) => ({
+      pattern: r.pattern,
+      enable: r.enable ?? true,
+    })) ?? [
+      {
+        pattern: "^Host$",
+        enable: true,
+      },
+    ],
     skippedNoResumable: raw?.skippedNoResumable ?? false,
   };
 }

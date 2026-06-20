@@ -19,6 +19,7 @@ copyDir(srcDir, firefoxDir).then(async () => {
   const manifestFile = path.join(firefoxDir, "manifest.json");
   const manifest = JSON.parse(await fs.readFile(manifestFile, "utf-8"));
   manifest.background.service_worker = undefined;
+  manifest.key = undefined;
   await fs.writeFile(manifestFile, JSON.stringify(manifest, null, 2));
   await zipDir(firefoxDir, firefoxZip);
 });
