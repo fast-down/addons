@@ -62,7 +62,9 @@ Alpine.data("options", () => {
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === "local" && changes[STORAGE_KEY]) {
       const cfg = buildConfig(changes[STORAGE_KEY].newValue);
-      Object.assign(config, cfg);
+      if (JSON.stringify(cfg) !== JSON.stringify(config)) {
+        Object.assign(config, cfg);
+      }
     }
   });
 

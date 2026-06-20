@@ -47,6 +47,6 @@ export function buildConfig(raw) {
         pattern: r.pattern,
         enable: r.enable ?? true,
       })) ?? [],
-    skippedNoResumable: raw?.skippedNoResumable ?? true,
+    skippedNoResumable: raw?.skippedNoResumable ?? false,
   };
 }
